@@ -29,7 +29,7 @@ def import_csv():
                 db.session.commit()
             else:
                 missing_headers = [header for header in headers if header not in header_row]
-                print('The following headers are missing in the CSV file: {}'.format(missing_headers))
+                print('The following headers are missing in the CSV file {} : {}'.format(csv_file, missing_headers))
 
 with app.app_context():
     import_csv()

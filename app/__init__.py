@@ -1,16 +1,13 @@
-from flask import Flask
+from flask import Flask ,request, jsonify
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-import csv
 import datetime
-
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
 
 def get_previous_business_day(business_date):
     previous_day = business_date - datetime.timedelta(days=1)
@@ -18,26 +15,10 @@ def get_previous_business_day(business_date):
         return get_previous_business_day(previous_day)
     return previous_day
 
-
 def calculate_movement(current_rate, previous_rate):
     return (1 - (current_rate / previous_rate)) * 100
 
-def import_csv():
-    with open('/Users/dhanukaperera/Projects/QuantSpark/data/fx_rates_1720230124.csv',mode='r', encoding='utf-8-sig') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            try:
-                print(row['business_date'])
-                business_date = datetime.datetime.strptime(row['business_date'], '%d/%m/%Y').date()
-                exchange_rate = float(row['exchange_rate'])
-                fxrate = FXRate(business_date=business_date, country_name=row['country_name'], 
-                                currency_code=row['currency_code'], exchange_rate=exchange_rate)
-                db.session.add(fxrate)
-            except (ValueError, TypeError):
-                app.logger.warning(f"Invalid data: {row}")
-    db.session.commit()
-
-@app.route('/movements')
+@app.route('/movements',methods = ['POST'])
 def movements():
     business_date = request.args.get('date')
     if not business_date:
@@ -49,8 +30,8 @@ def movements():
         return jsonify(error='Invalid date parameter'), 400
 
     previous_day = get_previous_business_day(business_date)
-    current_rates = FXRate.query.filter_by(business_date=business_date).all()
-    previous_rates = FXRate.query.filter_by(business_date=previous_day).all()
+    current_rates = models.FXRate.query.filter_by(business_date=business_date).all()
+    previous_rates = models.FXRate.query.filter_by(business_date=previous_day).all()
 
     if not current_rates or not previous_rates:
         return jsonify(error='No data for the given date'), 404
@@ -64,7 +45,5 @@ def movements():
             movements.append(current_rate.to_dict())
 
     return jsonify(movements)
-
-
 
 from app import routes, models
