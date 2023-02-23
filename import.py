@@ -17,7 +17,6 @@ def import_csv():
             header_row = next(reader)
 
             if all(header in header_row for header in headers):
-                print('All headers exist in the CSV file')
                 for row in reader:
                     try:
                         business_date = datetime.datetime.strptime(row['business_date'], '%d/%m/%Y').date()
@@ -30,7 +29,7 @@ def import_csv():
                 db.session.commit()
             else:
                 missing_headers = [header for header in headers if header not in header_row]
-                print('The following headers are missing in the CSV file {} : {}'.format(csv_file, missing_headers))
+                app.logger.warning(f"The following headers are missing in the CSV file {csv_file} : {missing_headers}")
 
 with app.app_context():
     import_csv()
