@@ -2,6 +2,7 @@ import csv
 import glob
 import datetime
 from app import app, db, models
+import datetime
 
 csv_directory = './data'
 
