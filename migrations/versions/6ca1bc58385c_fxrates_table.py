@@ -1,8 +1,8 @@
-"""fxrate table
+"""fxrates table
 
-Revision ID: 41e2ddbdec15
+Revision ID: 6ca1bc58385c
 Revises: 
-Create Date: 2023-02-23 13:44:17.927495
+Create Date: 2023-02-23 15:29:53.644269
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '41e2ddbdec15'
+revision = '6ca1bc58385c'
 down_revision = None
 branch_labels = None
 depends_on = None

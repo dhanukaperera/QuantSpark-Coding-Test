@@ -52,3 +52,37 @@ Include all files you deem relevant such as migration files and requirements.
 If there are any parts of the test that you struggle with, it's fine, just leave it till the end, focus on what you can do and we will judge the submission as a whole.
 
 `Good luck!`
+
+Steps Setup the Project and Run:
+
+1. Step up the env
+
+Navigate to the project directly in the terminal and create a virtual env
+```python3 -m venv venv```
+
+Active virtual env
+```source venv/bin/activate```
+
+install dependencies
+```pip install -r requirements.txt```
+
+export the main app
+```export FLASK_APP=main.py     ```
+
+2. Migrate the DB
+
+Type the following commands in the terminal
+```flask db init```
+``` flask db migrate -m "fxrates table"```
+```flask db upgrade```
+
+3. Import data from CSV
+
+```python import.py ```
+
+4. Run the flask server
+
+```flask run```
+
+5. Run the unit tests
+```python -m unittest```
